@@ -32,14 +32,12 @@ for fp in tqdm(glob.iglob(data_dir+"*/20[1|2]*/*.trop")):
     data = df[["___EPOCH____", "TROTOT", "TRWET", "WVAPOR", "MTEMP"]]
     data.columns = ["time", "ztd", "zwd", "pwv", "mt"]
     if sitename in out_dic:
-        out_dic[sitename].append(data)
+        out_dic[sitename] = out_dic[sitename].append(data)
     else:
         out_dic[sitename] = data
     # break
 
 for k in tqdm(out_dic):
-    print(k)
-    print(out_dic[k].head())
     df = out_dic[k]
     df = df.sort_values("time")
     df.to_csv(data_dir+"../all/"+k+".csv")

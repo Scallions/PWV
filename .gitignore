@@ -277,3 +277,4 @@ dataset
 # 不同步目录
 local
 checkpoint
+figs

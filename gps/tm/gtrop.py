@@ -76,6 +76,41 @@ class GTrop:
         S2 = np.sin(doy*4*np.pi/365.25)
         xs = np.stack([Tr, np.ones_like(Tr), C1, S1, C2, S2])
         tm = np.dot(args, xs)
+        rate = np.dot(dtargs, xs)
+        tm = tm + rate*(hs-h)/1000
+        return tm
+
+
+    @classmethod
+    def calc_tm_dates(cls, lon:float, lat:float, dates, h:float)->np.ndarray:
+        """根据dates中的日期，指定地点的tm
+
+        Args:
+            lon (float): 经度
+            lat (float): 纬度
+            dates (_type_): 需要计算的一些日期
+            h (float): 高度
+
+        Returns:
+            np.ndarray: 计算所得的tm
+        """
+        args = cls.Targs.interp(longitude=lon, latitude=lat)
+        dtargs = cls.Dtargs.interp(longitude=lon, latitude=lat)
+        # 构建系数矩阵 TODO: 具体实现
+        year = dates.year
+        doy = dates.doy
+        # 计算地面Tm
+        hs = cls.H.interp(longitude=lon, latitude=lat)
+        Tr = year + doy/365.25 - 1980
+        C1 = np.cos(doy*2*np.pi/365.25)
+        S1 = np.sin(doy*2*np.pi/365.25)
+        C2 = np.cos(doy*4*np.pi/365.25)
+        S2 = np.sin(doy*4*np.pi/365.25)
+        xs = np.stack([Tr, np.ones_like(Tr), C1, S1, C2, S2])
+        tm = np.dot(args, xs)
+        rate = np.dot(dtargs, xs)
+        # 计算高度h处Tm
+        tm = tm + rate*(hs-h)/1000
         return tm
 
 
