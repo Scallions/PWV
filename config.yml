@@ -1,0 +1,5 @@
+ZHD: SAAS
+ZWD: Gtrop
+MODEL_DIR: HDD/data/models
+ERA5_DIR: /Volumes/data3/era5
+ZTD_DIR: /Volumes/HDD/Data/ztd/ztd
