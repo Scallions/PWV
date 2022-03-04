@@ -40,4 +40,4 @@ for fp in tqdm(glob.iglob(data_dir+"*/20[1|2]*/*.trop")):
 for k in tqdm(out_dic):
     df = out_dic[k]
     df = df.sort_values("time")
-    df.to_csv(data_dir+"../all/"+k+".csv")
+    df.to_csv(data_dir+"../all/"+k+".csv", index=False)
