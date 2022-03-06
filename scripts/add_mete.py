@@ -5,7 +5,7 @@
 
 
 import glob
-from tqdm import tqdm
+from tqdm import tqdm as tqdm2
 import pandas as pd
 import xarray as xr
 import os
@@ -45,7 +45,8 @@ def process_fp(fp):
     Ts = []
     if os.path.exists(data_dir+"mete/"+sitename+".csv"):
         return
-    for row in site_data.itertuples():
+    for row in tqdm2(site_data.itertuples(), leave=False, total=site_data.shape[0]):
+    # for row in site_data.itertuples():
         # print(row)
         t = row[0]
         year = t.year
@@ -90,20 +91,24 @@ def process_fp(fp):
         Ts.append(temp.item())
     site_data['lon'] = [lon]*site_data.shape[0]
     site_data['lat'] = [lat]*site_data.shape[0]
+    site_data['h'] = [h]*site_data.shape[0]
     site_data['rh'] = Rhs
     site_data['e'] = Es
     site_data['T'] =Ts
     site_data['p'] = Pres
-    site_data.to_csv(data_dir+"mete/"+sitename+".csv", index=False)
+    site_data.to_csv(data_dir+"mete/"+sitename+".csv")
     # break
 
 
-# 开多进程加速
+for fp in tqdm2(glob.glob(data_dir+"all/*.csv")):
+    process_fp(fp)
+
+# 开多进程加速 有bug
 # from multiprocessing import Pool
 # total = len(glob.glob(data_dir+"all/*.csv"))
-# with Pool(8) as pool:
-#     for i in tqdm(pool.imap(process_fp, glob.iglob(data_dir+"all/*.csv")), total=total):
-#         pass
+# with Pool(10) as pool:
+#      for i in tqdm2(pool.imap(process_fp, glob.iglob(data_dir+"all/*.csv")), total=total):
+#          pass
 
-import tqdm.contrib.concurrent
-tqdm.contrib.concurrent.process_map(process_fp, glob.glob(data_dir+"all/*.csv"))
+#import tqdm.contrib.concurrent
+#tqdm.contrib.concurrent.process_map(process_fp, glob.glob(data_dir+"all/*.csv"))
