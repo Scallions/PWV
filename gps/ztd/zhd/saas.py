@@ -3,6 +3,7 @@
 
 
 import math
+import numpy as np
 
 
 def saas(lat:float, ps:float, h:float)->float:
@@ -18,4 +19,5 @@ def saas(lat:float, ps:float, h:float)->float:
     Returns:
         float: zhd
     """
-    return (0.0022768*ps)/(1-0.00266*math.cos(2*lat)-0.28*10**-6*h)
+    lat = lat*math.pi/180
+    return (0.0022768*ps)/(1-0.00266*np.cos(2*lat)-0.28*10**-6*h)
