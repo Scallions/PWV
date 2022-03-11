@@ -9,6 +9,7 @@ from tqdm import tqdm as tqdm2
 import pandas as pd
 import xarray as xr
 import os
+from datetime import date, timedelta
 
 import sys
 sys.path.append(".")
@@ -21,6 +22,53 @@ site_df = greenland_sites()
 
 # print(site_df.head())
 
+site_mete = {}
+
+def pre_mete():
+    pass
+    # start = date(2018,1,1)
+    # end = date(2022, 3, 10)
+
+    # cur  = start
+    # total = (end-start).days
+    # process_bar = tqdm2(total=total)
+    # while cur <= end:
+    #     year = cur.year
+    #     mon = cur.month
+    #     day = cur.day
+    #     doy = cur.timetuple().tm_yday
+    #     era_fp = era_dir + f"{year}/era5_{year}_{mon}_{day}.nc"
+    #     if year > 2019 or not os.path.exists(era_fp):
+    #         Pres.append(None)
+    #         Es.append(None)
+    #         Rhs.append(None)
+    #         Ts.append(None)
+    #         continue
+    #     era_ds = xr.open_dataset(era_fp).mean('time').interp(longitude=lon, latitude=lat)
+    #     rhs = era_ds.r
+    #     ts = era_ds.t
+    #     hs = era_ds.z / 9.7803253359
+    #     level = era_ds.level
+    #     ls = xr.DataArray(level.values, coords=[hs.values], dims="h")
+    #     if h < hs.min():
+    #         dh = (hs[36]-h)/(hs[35]-hs[36])
+    #         l = level[36]+dh*(level[36]-level[35])
+    #         temp = ts[36]+dh*(ts[36]-ts[35])-273.15
+    #         rh = rhs[36]+dh*(rhs[36]-rhs[35])
+    #     else:
+    #         try:
+    #             l = ls.interp(h=h)
+    #             temp = ts.interp(level=l)-273.15
+    #             rh = rhs.interp(level=l)
+    #         except:
+    #             print(h, hs)
+    #             Pres.append(None)
+    #             Es.append(None)
+    #             Rhs.append(None)
+    #             Ts.append(None)
+    #             continue
+    #     es = 6.11*10**(7.5*temp/(237.3+temp))
+    #     e = rh*es/100
 
 def process_fp(fp):
     # print(fp)
