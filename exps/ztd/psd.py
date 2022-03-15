@@ -4,7 +4,7 @@
 
 import numpy as np
 from scipy.fftpack import fft, fftfreq
-from scipy.signal import periodogram
+from scipy.signal import periodogram, lombscargle, welch
 import pandas as pd
 import glob
 from tqdm import tqdm
@@ -14,14 +14,38 @@ data_dir = "/Volumes/HDD/Data/ztd/"
 
 # print(site_df.head())
 
+
+def lomb(idx, ts):
+    start = idx[0]
+    tindex = idx.map(lambda x: (x - start).days)
+    # t = np.arange(1, ts.shape[0]) # day 周期
+    t = np.arange(1, 365*2)
+    w = 2*np.pi/t
+    # w = np.linspace(0.01, 8*np.pi/365, ts.shape[0])
+    # t = 1/w * 2* np.pi
+    pxx = lombscargle(tindex, ts, w, normalize=True)
+    return t, pxx
+
+def periodgram(idx, ts):
+    f, pxx = periodogram(ts, 365, return_onesided=True, detrend='linear', scaling='density')
+    # f, pxx = welch(ts, 365, return_onesided=True, detrend='linear', scaling='spectrum')
+    f = f[1:]
+    pxx = pxx[1:]
+    t = 1/f # * 365
+    return t, pxx
+
 total = len(glob.glob(data_dir+"mete/*.csv"))
 stats = []
 for fp in tqdm(glob.iglob(data_dir+"mete/*.csv"), total=total):
     sitename = fp.split("/")[-1][:4]
-    site_data = pd.read_csv(fp)
+    site_data = pd.read_csv(fp, parse_dates=['time'])
     ts = site_data['ztd']
     ts = ts - ts.mean()
     ts = ts.values
+    if len(ts) < 365:
+        continue
+    start = site_data['time'][0]
+    tindex = site_data['time'].map(lambda x: (x - start).days)
     # y_hat = fft(ts)
     # y_abs = np.abs(y_hat)
     # y_angle = np.angle(y_hat)
@@ -35,15 +59,22 @@ for fp in tqdm(glob.iglob(data_dir+"mete/*.csv"), total=total):
     # plt.psd(ts, 512, 365)
     # plt.savefig("figs/psd2.png")
 
-    f, pxx = periodogram(ts, 365, return_onesided=True, detrend='linear', scaling='density')
-    f = f[1:]
-    pxx = pxx[1:]
-    t = 1/f # * 365
+    # f, pxx = periodogram(ts, 365, return_onesided=True, detrend='linear', scaling='density')
+    # # f, pxx = welch(ts, 365, return_onesided=True, detrend='linear', scaling='spectrum')
+    # f = f[1:]
+    # pxx = pxx[1:]
+    # t = 1/f # * 365
     # plt.figure()
+    # t,pxx = lomb(site_data['time'], ts)
+    t, pxx = periodgram(site_data['time'], ts)
     plt.plot(t, pxx)
     # plt.semilogy(t, pxx)
+    # fig, (ax_t, ax_w) = plt.subplots(2, 1, constrained_layout=True)
+    # ax_t.plot(tindex, ts)
+    # ax_w.plot(t, pxx)
+    # break
 
 plt.xlabel("Period")
 plt.ylabel("PS")
 plt.savefig("figs/psd-ztd.png")
-    # break
+
