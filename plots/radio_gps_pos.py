@@ -9,7 +9,9 @@ import sys
 sys.path.append(".")
 from data.filter_sites import greenland_sites
 
-df = greenland_sites()
+# df = greenland_sites(
+data_dir = "/Volumes/HDD/Data/ztd/"
+df = pd.read_csv(data_dir+"./gps_sites_1d_hz_grl_filter.csv", sep=r",", engine='python', on_bad_lines='skip')#lambda badline: badline[:13]))
 radio = pd.read_csv("dataset/radio.csv", sep=r"\s+", header=None)
 
 print(df.head())

@@ -2,7 +2,6 @@
 统计ztd中观测的缺失率，以天为计算
 """
 
-import site
 from tqdm import tqdm
 import pandas as pd
 import glob
