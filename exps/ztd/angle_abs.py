@@ -49,8 +49,9 @@ for fp in tqdm(glob.iglob(data_dir+"mete/*.csv"), total=total):
 
 out_df.to_csv("dataset/ztd_angle_abs.csv", index=False)
 
-plt.scatter(out_df['sinx'], out_df['cosx'], cmap='jet', c=out_df['lat'], label='sinx', alpha=0.5)
-plt.scatter(out_df['sin2x'], out_df['cos2x'], cmap='jet', c=out_df['lat'], label='sin2x', marker='x', alpha=0.5)
+plt.scatter(out_df['sinx'], out_df['cosx'], cmap='jet', c=out_df['year'], label='sinx', alpha=0.5)
+plt.scatter(out_df['sin2x'], out_df['cos2x'], cmap='jet', c=out_df['year'], label='sin2x', marker='x', alpha=0.5)
 plt.legend()
 plt.colorbar()
-plt.show()
+# plt.show()
+plt.savefig("figs/angle-ztd.png")

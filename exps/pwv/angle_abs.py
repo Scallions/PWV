@@ -53,4 +53,5 @@ plt.scatter(out_df['sinx'], out_df['cosx'], cmap='jet', c=out_df['year'], label=
 plt.scatter(out_df['sin2x'], out_df['cos2x'], cmap='jet', c=out_df['year'], label='sin2x', marker='x', alpha=0.5)
 plt.legend()
 plt.colorbar()
-plt.show()
+# plt.show()
+plt.savefig("figs/angle-pwv.png")
