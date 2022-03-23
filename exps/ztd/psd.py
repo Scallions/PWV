@@ -65,8 +65,8 @@ for fp in tqdm(glob.iglob(data_dir+"mete/*.csv"), total=total):
     # pxx = pxx[1:]
     # t = 1/f # * 365
     # plt.figure()
-    # t,pxx = lomb(site_data['time'], ts)
-    t, pxx = periodgram(site_data['time'], ts)
+    t,pxx = lomb(site_data['time'], ts)
+    # t, pxx = periodgram(site_data['time'], ts)
     plt.plot(t, pxx)
     # plt.semilogy(t, pxx)
     # fig, (ax_t, ax_w) = plt.subplots(2, 1, constrained_layout=True)
@@ -76,5 +76,5 @@ for fp in tqdm(glob.iglob(data_dir+"mete/*.csv"), total=total):
 
 plt.xlabel("Period")
 plt.ylabel("PS")
-plt.savefig("figs/psd-ztd.png")
+plt.savefig("figs/psd-ztd-lomb.png")
 
