@@ -7,7 +7,7 @@ import pandas as pd
 
 data_dir = "/Volumes/HDD/Data/ztd/"
 
-tsc = pd.read_csv(data_dir+"pwv_1d_hz_grl_filter.csv", parse_dates=[0])
+tsc = pd.read_csv(data_dir+"pwv_1h_hz_grl_filter.csv", parse_dates=[0])
 cols = list(tsc.columns)
 cols[0] = 'time'
 tsc.columns = cols
@@ -19,4 +19,4 @@ from missingpy import MissForest
 tc = MissForest().fit_transform(tsc)
 tc = type(tsc)(data = tc, index=tsc.index, columns=tsc.columns)
 print(tc.shape)
-tc.to_csv(data_dir+"pwv_1d_hz_grl_filter_miss.csv")
+tc.to_csv(data_dir+"pwv_1h_hz_grl_filter_miss.csv")
