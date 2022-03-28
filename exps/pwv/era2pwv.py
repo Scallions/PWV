@@ -36,7 +36,8 @@ for year in tqdm(range(start, end+1)):
         tempc = tempk - 273.15 # 摄氏温度
         e_sat = 6.112*np.exp((17.62*tempc)/(tempc+243.12))
         var_pres = rhs * e_sat / 100
-        p_dry = 100/(Rd*tempk)*pres
+        p_d = -var_pres + pres
+        p_dry = 100/(Rd*tempk)*p_d
         mix_rat = 0.622*var_pres/(-var_pres+pres)
         cwv = (mix_rat[:,1:,:,:]*p_dry[:,1:,:,:]) * (-alt[:,1:,:,:] + alt[:,:-1,:,:].values)
         pwv = cwv.sum(axis=1)/997*1000
