@@ -27,7 +27,7 @@ def lomb(idx, ts):
     return t, pxx
 
 def periodgram(idx, ts):
-    f, pxx = periodogram(ts, 365, return_onesided=True, detrend='linear', scaling='density')
+    f, pxx = periodogram(ts, 1, return_onesided=True, detrend='linear', scaling='density')
     # f, pxx = welch(ts, 365, return_onesided=True, detrend='linear', scaling='spectrum')
     f = f[1:]
     pxx = pxx[1:]
@@ -65,9 +65,10 @@ for fp in tqdm(glob.iglob(data_dir+"mete/*.csv"), total=total):
     # pxx = pxx[1:]
     # t = 1/f # * 365
     # plt.figure()
-    t,pxx = lomb(site_data['time'], ts)
-    # t, pxx = periodgram(site_data['time'], ts)
-    plt.plot(t, pxx)
+    # t,pxx = lomb(site_data['time'], ts)
+    t, pxx = periodgram(site_data['time'], ts)
+    plt.plot(t, pxx, color='black')
+    plt.xlim(0,1000)
     # plt.semilogy(t, pxx)
     # fig, (ax_t, ax_w) = plt.subplots(2, 1, constrained_layout=True)
     # ax_t.plot(tindex, ts)
@@ -76,5 +77,6 @@ for fp in tqdm(glob.iglob(data_dir+"mete/*.csv"), total=total):
 
 plt.xlabel("Period")
 plt.ylabel("PS")
-plt.savefig("figs/psd-ztd-lomb.png")
+plt.tight_layout()
+plt.savefig("figs/psd-ztd.png")
 

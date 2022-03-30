@@ -1,35 +1,22 @@
 """
-插值实验
+测试插值
+
 """
 
-
-# 插值器
-imputar = {
-
-}
-
-def read_raw_data():
-    """读取原始数据
-    """
-    pass
-
-
-
-
-for name in imputar:
-    # 插值数据并保存给后面分析
-    pass
-
-
 import pandas as pd
-import glob
-from tqdm import tqdm
 
 data_dir = "/Volumes/HDD/Data/ztd/"
 
-total = len(glob.glob(data_dir+"mete/*.csv"))
-stats = []
+tsc = pd.read_csv(data_dir+"ztd_1h_hz_grl_filter.csv", parse_dates=[0])
+cols = list(tsc.columns)
+cols[0] = 'time'
+tsc.columns = cols
+tsc.set_index('time', inplace=True)
+print(tsc.columns)
+print(tsc.shape)
 
-for fp in tqdm(glob.iglob(data_dir+"mete/*.csv"), total=total):
-    sitename = fp.split("/")[-1][:4]
-    site_data = pd.read_csv(fp, parse_dates=['time'])
+from missingpy import MissForest
+tc = MissForest().fit_transform(tsc)
+tc = type(tsc)(data = tc, index=tsc.index, columns=tsc.columns)
+print(tc.shape)
+tc.to_csv(data_dir+"ztd_1h_hz_grl_filter_miss.csv")

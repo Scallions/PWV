@@ -42,7 +42,7 @@ def periodgram(idx, ts, fs):
     return t, pxx
 
 # df = pd.read_csv(data_dir+"pwv_1h_hz_grl_filter.csv", index_col=0, parse_dates=True)
-df = load_data(type='pwv', freq='h', fill=True)
+df = load_data(type='ztd', freq='h', fill=True)
 
 sites = list(df.columns)
 
@@ -60,5 +60,5 @@ for site in sites:
 plt.xlabel("Period")
 plt.ylabel("PS")
 plt.tight_layout()
-plt.savefig("figs/psd-pwv-d.png")
+plt.savefig("figs/psd-ztd-d.png")
 
