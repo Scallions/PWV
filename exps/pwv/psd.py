@@ -20,7 +20,7 @@ def lomb(idx, ts):
     t = np.arange(1, ts.shape[0]) # day 周期
     w = 2*np.pi/t
     # w = np.linspace(0.01, 8*np.pi/365, ts.shape[0])
-    # t = 1/w * 2* np.pi
+    t = 1/w * 2* np.pi
     pxx = lombscargle(tindex, ts, w, normalize=True)
     return t, pxx
 

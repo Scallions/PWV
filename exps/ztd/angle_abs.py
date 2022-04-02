@@ -48,10 +48,30 @@ for fp in tqdm(glob.iglob(data_dir+"mete/*.csv"), total=total):
 
 
 out_df.to_csv("dataset/ztd_angle_abs.csv", index=False)
+plt.rcParams['font.sans-serif']=['SimHei'] #用来正常显示中文标签
+plt.rcParams['axes.unicode_minus']=False #用来正常显示负号
 
-plt.scatter(out_df['sinx'], out_df['cosx'], cmap='jet', c=out_df['year'], label='sinx', alpha=0.5)
-plt.scatter(out_df['sin2x'], out_df['cos2x'], cmap='jet', c=out_df['year'], label='sin2x', marker='x', alpha=0.5)
+fig = plt.figure(dpi=300)
+ax = fig.add_subplot(projection="polar")
+# plt.axhline(0)
+# plt.axvline(0)
+# plt.scatter(out_df['sinx'], out_df['cosx'], cmap='jet', c=out_df['year'], label='周年', alpha=0.5)
+# plt.scatter(out_df['sin2x'], out_df['cos2x'], cmap='jet', c=out_df['year'], label='半周年', marker='x', alpha=0.5)
+
+ang1 = np.angle(out_df['sinx'] + 1j * out_df['cosx'])
+val1 = np.sqrt(out_df['sinx'] ** 2 + out_df['cosx'] ** 2)
+
+ax.scatter(ang1, val1, cmap='jet', c=out_df['year'], label='周年', alpha=0.5)
+
+ang2 = np.angle(out_df['sin2x'] + 1j * out_df['cos2x'])
+val2 = np.sqrt(out_df['sin2x'] ** 2 + out_df['cos2x'] ** 2)
+c = ax.scatter(ang2, val2, cmap='jet', c=out_df['year'], label='半周年', marker='x', alpha=0.5)
+# plt.polar(ang1, val1, 'ro', label='周年', alpha=0.5)
+
+# plt.hlines(0)
+# plt.vlines(0)
 plt.legend()
-plt.colorbar()
+plt.colorbar(c, ax=ax)
 # plt.show()
+plt.tight_layout()
 plt.savefig("figs/angle-ztd.png")
