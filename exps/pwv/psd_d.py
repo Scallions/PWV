@@ -45,7 +45,9 @@ def periodgram(idx, ts, fs):
 df = load_data(type='pwv', freq='h', fill=True)
 
 sites = list(df.columns)
-
+fig = plt.figure(dpi=300)
+fig.set_figwidth(5)
+fig.set_figheight(3)
 for site in sites:
     ts = df[site]
     tidx = ts.index
@@ -57,8 +59,9 @@ for site in sites:
     plt.plot(t/24, pxx, color='black')
     # break
 # plt.show()
-plt.xlabel("Period")
+plt.xlabel("Period(day)")
 plt.ylabel("PS")
+plt.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
 plt.tight_layout()
 plt.savefig("figs/psd-pwv-d.png")
 

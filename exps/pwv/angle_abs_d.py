@@ -41,6 +41,7 @@ out_df.to_csv("dataset/pwv_angle_abs_d.csv", index=False)
 plt.rcParams['font.sans-serif']=['SimHei'] #用来正常显示中文标签
 plt.rcParams['axes.unicode_minus']=False #用来正常显示负号
 fig = plt.figure(dpi=300)
+fig.set_figwidth(5)
 ax = fig.add_subplot(projection="polar")
 # plt.axhline(0)
 # plt.axvline(0)

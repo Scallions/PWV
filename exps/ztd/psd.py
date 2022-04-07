@@ -36,6 +36,9 @@ def periodgram(idx, ts):
 
 total = len(glob.glob(data_dir+"mete/*.csv"))
 stats = []
+fig = plt.figure(dpi=300)
+fig.set_figwidth(5)
+fig.set_figheight(3)
 for fp in tqdm(glob.iglob(data_dir+"mete/*.csv"), total=total):
     sitename = fp.split("/")[-1][:4]
     site_data = pd.read_csv(fp, parse_dates=['time'])
@@ -75,7 +78,7 @@ for fp in tqdm(glob.iglob(data_dir+"mete/*.csv"), total=total):
     # ax_w.plot(t, pxx)
     # break
 
-plt.xlabel("Period")
+plt.xlabel("Period(day)")
 plt.ylabel("PS")
 plt.tight_layout()
 plt.savefig("figs/psd-ztd.png")

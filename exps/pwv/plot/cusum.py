@@ -29,8 +29,13 @@ import pygmt
 pygmt.config(MAP_TITLE_OFFSET="1p")
 pygmt.config(MAP_HEADING_OFFSET="1p")
 
+maxi = ts.idxmax(axis=1)
+mini = ts.idxmin(axis=1)
+print(maxi, mini)
+
 pmin = ts.min().min()-1
 pmax = ts.max().max()+1
+print(pmin, pmax)
 start = 2010
 end = 2021
 fig = pygmt.Figure()

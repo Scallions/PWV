@@ -51,6 +51,7 @@ out_df.to_csv("dataset/pwv_angle_abs.csv", index=False)
 plt.rcParams['font.sans-serif']=['SimHei'] #用来正常显示中文标签
 plt.rcParams['axes.unicode_minus']=False #用来正常显示负号
 fig = plt.figure(dpi=300)
+fig.set_figwidth(5)
 ax = fig.add_subplot(projection="polar")
 # plt.axhline(0)
 # plt.axvline(0)
@@ -71,4 +72,5 @@ c = ax.scatter(ang2, val2, cmap='jet', c=out_df['year'], label='半周年', mark
 # plt.vlines(0)
 plt.legend()
 plt.colorbar(c, ax=ax)
+plt.tight_layout()
 plt.savefig("figs/angle-pwv.png")

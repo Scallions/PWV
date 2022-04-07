@@ -21,7 +21,10 @@ tsafter.set_index('time', inplace=True)
 sitenames = tsbefore.isna().sum().sort_values(ascending=False).index
 cnt = 7
 size = 0.1
-fig, ax = plt.subplots(cnt,1, sharex=True)
+fig = plt.figure(dpi=300, tight_layout=True)
+fig.set_figwidth(5)
+fig.set_figheight(3.5)
+ax = fig.subplots(cnt,1, sharex=True)
 for i in range(cnt):
     sitename = sitenames[i]
     ax[i].scatter(tsafter.index, tsafter[sitename], label="fill", s=size)
@@ -30,5 +33,6 @@ for i in range(cnt):
     ax[i].set_ylabel(sitename)
     # plt.ylabel("ZTD/mm")
 handles, labels = ax[i-1].get_legend_handles_labels()
-fig.legend(handles, labels, loc='lower center', ncol=5, bbox_to_anchor=(0.5, -0.01), markerscale=4, frameon=False)
+fig.legend(handles, labels, loc='lower center', ncol=5, bbox_to_anchor=(0.5, -0.025), markerscale=4, frameon=False)
+plt.tight_layout()
 plt.savefig("figs/missfill.png")
