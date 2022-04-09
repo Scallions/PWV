@@ -8,7 +8,11 @@ GTrop模型
 import xarray as xr
 import numpy as np
 
-class GTrop:
+from gps.libs import manager
+
+from .itm import ITm
+@manager.TM_MODELS.add_component
+class GTrop(ITm):
     name = "GTrop"
     Targs = None
     Dtargs = None
@@ -17,9 +21,9 @@ class GTrop:
     @classmethod
     def load_args(cls):
         if cls.Targs is None:
-            cls.Targs = xr.load_dataarray("data/gtrop_tm_grl.nc")
-            cls.Dtargs = xr.load_dataarray("data/gtrop_dt_grl.nc")
-            cls.H = xr.load_dataarray("data/gtrop_h.nc")
+            cls.Targs = xr.load_dataarray("dataset/gtrop_tm_grl.nc")
+            cls.Dtargs = xr.load_dataarray("dataset/gtrop_dt_grl.nc")
+            cls.H = xr.load_dataarray("dataset/gtrop_h.nc")
 
     @classmethod
     def calc_tm(cls, lon, lat, year, doy, h):
@@ -94,6 +98,7 @@ class GTrop:
         Returns:
             np.ndarray: 计算所得的tm
         """
+        cls.load_args()
         args = cls.Targs.interp(longitude=lon, latitude=lat)
         dtargs = cls.Dtargs.interp(longitude=lon, latitude=lat)
         # 构建系数矩阵 TODO: 具体实现
