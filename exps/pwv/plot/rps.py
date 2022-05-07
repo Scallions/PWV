@@ -20,8 +20,8 @@ ds = xr.DataArray(rps, dims=("lat", "lon"), coords={
 # exit()
 
 data_dir = "/Volumes/HDD/Data/ztd/"
-df = pd.read_csv(data_dir+"./gps_sites_1d_hz_grl_filter.csv", sep=r",", engine='python', on_bad_lines='skip')#lambda badline: badline[:13]))
-site_set = set(df['Sta'])
+df = pd.read_csv(data_dir+"./gps_sites_select.csv", sep=r",", engine='python', on_bad_lines='skip')#lambda badline: badline[:13]))
+# site_set = set(df['Sta'])
 
 fig = pygmt.Figure()
 
@@ -43,4 +43,4 @@ fig.plot(
     pen = "red"
 )
 fig.colorbar(frame=['x0.1'])
-fig.savefig("figs/greenland_rps.png")
+fig.savefig("figs/greenland_rps_l.png")

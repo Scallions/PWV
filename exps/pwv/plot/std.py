@@ -22,13 +22,13 @@ ds = xr.DataArray(stds, dims=("lat", "lon"), coords={
 # exit()
 
 data_dir = "/Volumes/HDD/Data/ztd/"
-df = pd.read_csv(data_dir+"./gps_sites_1d_hz_grl_filter.csv", sep=r",", engine='python', on_bad_lines='skip')#lambda badline: badline[:13]))
-site_set = set(df['Sta'])
+df = pd.read_csv(data_dir+"./gps_sites_select.csv", sep=r",", engine='python', on_bad_lines='skip')#lambda badline: badline[:13]))
+# site_set = set(df['Sta'])
 
 fig = pygmt.Figure()
 
 fig.basemap(region="-75/-12/55/85", projection="L-42.5/30/35/25/3i", frame=["x20", "y10"])
-pygmt.makecpt(cmap="viridis", series=[stds.min(), stds.max()])
+pygmt.makecpt(cmap="viridis", series=[stds.min()-0.01, stds.max()+0.01])
 fig.grdimage(
     grid = ds,
     cmap = True,
@@ -45,4 +45,4 @@ fig.plot(
     pen = "red"
 )
 fig.colorbar(frame=['x0.5'])
-fig.savefig("figs/greenland_stds.png")
+fig.savefig("figs/greenland_stds_l.png")

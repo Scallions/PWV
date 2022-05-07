@@ -21,7 +21,7 @@ class GPT3(ITm):
 
     @classmethod
     def calc_tm(cls, lon, lat, year, doy, h):
-        """GTrop模型计算Tm，采用的主要是sin cos周期建模，加上高度改正
+        """模型计算Tm，采用的主要是sin cos周期建模，加上高度改正
 
         Args:
             lon (float): 经度

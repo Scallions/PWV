@@ -27,3 +27,9 @@ print(tm.calc_tm(lat=68, lon=-40, doy=125, year=2015, h=2671))
 from gps.tm import GPT3
 
 print(GPT3.calc_tm(lat=68, lon=-40, doy=125, year=2015, h=2671))
+
+
+def download(file):
+    pass
+
+

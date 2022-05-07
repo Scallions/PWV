@@ -13,6 +13,7 @@ class DCGenerator(nn.Layer):
                  input_nz,
                  output_nc,
                  ngf=64,
+                 dropout = 0.1,
                  norm_type='batch',
                  padding_type='reflect'):
         """Construct a DCGenerator generator
@@ -43,7 +44,8 @@ class DCGenerator(nn.Layer):
                                    padding=0,
                                    bias_attr=use_bias),
                 BatchNorm2D(ngf * mult),
-                nn.ReLU()
+                nn.ReLU(),
+                nn.Dropout(dropout)
             ]
         else:
             model = [
@@ -54,7 +56,8 @@ class DCGenerator(nn.Layer):
                                    padding=0,
                                    bias_attr=use_bias),
                 norm_layer(ngf * mult),
-                nn.ReLU()
+                nn.ReLU(),
+                nn.Dropout(dropout)
             ]
 
         # add upsampling layers
@@ -69,7 +72,8 @@ class DCGenerator(nn.Layer):
                                        padding=1,
                                        bias_attr=use_bias),
                     BatchNorm2D(ngf * mult // 2),
-                    nn.ReLU()
+                    nn.ReLU(),
+                    nn.Dropout(dropout)
                 ]
             else:
                 model += [
@@ -80,7 +84,8 @@ class DCGenerator(nn.Layer):
                                        padding=1,
                                        bias_attr=use_bias),
                     norm_layer(int(ngf * mult // 2)),
-                    nn.ReLU()
+                    nn.ReLU(),
+                    nn.Dropout(dropout)
                 ]
 
         model += [
@@ -101,5 +106,5 @@ class DCGenerator(nn.Layer):
         x = paddle.reshape(x, [b,-1,1,1])
         x = self.model(x)
         # return x[:,:,:31,:66].reshape([-1,31,66]) # 调整输出大小
-        return x[:,:,:31,:64].reshape([-1,31,64]) # 调整输出大小
+        return x[:,:,:31,:64].reshape([b,31,64]) # 调整输出大小
         # return x

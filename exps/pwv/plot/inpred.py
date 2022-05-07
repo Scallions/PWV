@@ -30,7 +30,7 @@ era_s = era.std(axis=0)
 gps = (gps-gps_m)/gps_s
 # era = (era-era_m)/era_s
 
-t = datetime(2010,9,1,12)
+t = datetime(2019,3,1,12)
 s = tidxs[0]
 idx = int((t-s).total_seconds())//3600
 print(idx, t)
