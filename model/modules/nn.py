@@ -15,6 +15,7 @@
 import paddle
 import paddle.nn as nn
 import math
+from .init import kaiming_normal_, constant_
 
 
 class _SpectralNorm(nn.SpectralNorm):
@@ -90,3 +91,72 @@ class RhoClipper(object):
             w = module.w_beta
             w = w.clip(self.clip_min, self.clip_max)
             module.w_beta.set_value(w)
+
+class PixelShufflePack(nn.Layer):
+    """ Pixel Shuffle upsample layer.
+    Args:
+        in_channels (int): Number of input channels.
+        out_channels (int): Number of output channels.
+        scale_factor (int): Upsample ratio.
+        upsample_kernel (int): Kernel size of Conv layer to expand channels.
+    Returns:
+        Upsampled feature map.
+    """
+    def __init__(self, in_channels, out_channels, scale_factor,
+                 upsample_kernel):
+        super().__init__()
+        self.in_channels = in_channels
+        self.out_channels = out_channels
+        self.scale_factor = scale_factor
+        self.upsample_kernel = upsample_kernel
+        self.upsample_conv = nn.Conv2D(self.in_channels,
+                                       self.out_channels * scale_factor *
+                                       scale_factor,
+                                       self.upsample_kernel,
+                                       padding=(self.upsample_kernel - 1) // 2)
+        self.pixel_shuffle = nn.PixelShuffle(self.scale_factor)
+        self.init_weights()
+
+    def init_weights(self):
+        """Initialize weights for PixelShufflePack.
+        """
+        default_init_weights(self, 1)
+
+    def forward(self, x):
+        """Forward function for PixelShufflePack.
+        Args:
+            x (Tensor): Input tensor with shape (in_channels, c, h, w).
+        Returns:
+            Tensor with shape (out_channels, c, scale_factor*h, scale_factor*w).
+        """
+        x = self.upsample_conv(x)
+        x = self.pixel_shuffle(x)
+        return x
+
+@paddle.no_grad()
+def default_init_weights(layer_list, scale=1, bias_fill=0, **kwargs):
+    """Initialize network weights.
+    Args:
+        layer_list (list[nn.Layer] | nn.Layer): Layers to be initialized.
+        scale (float): Scale initialized weights, especially for residual
+            blocks. Default: 1.
+        bias_fill (float): The value to fill bias. Default: 0
+        kwargs (dict): Other arguments for initialization function.
+    """
+    if not isinstance(layer_list, list):
+        layer_list = [layer_list]
+    for m in layer_list:
+        if isinstance(m, nn.Conv2D):
+            kaiming_normal_(m.weight, **kwargs)
+            scale_weight = scale * m.weight
+            m.weight.set_value(scale_weight)
+            if m.bias is not None:
+                constant_(m.bias, bias_fill)
+        elif isinstance(m, nn.Linear):
+            kaiming_normal_(m.weight, **kwargs)
+            scale_weight = scale * m.weight
+            m.weight.set_value(scale_weight)
+            if m.bias is not None:
+                constant_(m.bias, bias_fill)
+        elif isinstance(m, nn.BatchNorm):
+            constant_(m.weight, 1)

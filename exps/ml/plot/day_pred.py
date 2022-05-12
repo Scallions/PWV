@@ -48,12 +48,12 @@ with fig.subplot(nrows=4, ncols=3, figsize=("5i", "6.5i"), autolabel="(a)+o0c/-0
             #     # pen="black"
             #     pen = "red"
             # )
-            # fig.colorbar(region="-75/-12/55/85", projection="L-43.5/30/35/25/1i",frame=['x10'])
+fig.colorbar(region="-75/-12/55/85", projection="L-43.5/30/35/25/1i",frame=True, position="+jCB+h+w6c+o0c/-1c")
 
 fig.savefig(f"figs/greenland_daypred_era.png")
 
 # figsize 宽高
-with fig.subplot(nrows=4, ncols=3, figsize=("5i", "6.5i"), autolabel="(a)+o0c/-0.2c", margins=["0.1c", "0.1c"],title="2019-12-01"):
+with fig.subplot(nrows=4, ncols=3, figsize=("5i", "6.5i"), autolabel="(a)+o0c/-0.2c", margins=["0.1c", "0.1c"],title="2019-03-01"):
     for i in range(12):
         row = i // 3
         col = i % 3

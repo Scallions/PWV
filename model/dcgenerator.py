@@ -1,5 +1,6 @@
 import paddle
 import paddle.nn as nn
+from .modules.nn import PixelShufflePack
 import functools
 
 from paddle.nn import BatchNorm2D
@@ -32,7 +33,7 @@ class DCGenerator(nn.Layer):
         else:
             use_bias = norm_layer == nn.BatchNorm2D
 
-        n_downsampling = 4
+        n_downsampling = 5
         mult = 2**(n_downsampling-1)
 
         if norm_type == 'batch':
@@ -65,24 +66,32 @@ class DCGenerator(nn.Layer):
             mult = 2**(n_downsampling - i)
             if norm_type == 'batch':
                 model += [
-                    nn.Conv2DTranspose(ngf * mult,
-                                       ngf * mult // 2,
-                                       kernel_size=4,
-                                       stride=2,
-                                       padding=1,
-                                       bias_attr=use_bias),
+                    # nn.Conv2DTranspose(ngf * mult,
+                    #                    ngf * mult // 2,
+                    #                    kernel_size=4,
+                    #                    stride=2,
+                    #                    padding=1,
+                    #                    bias_attr=use_bias),
+                    PixelShufflePack(ngf * mult,
+                                     ngf * mult // 2,
+                                     2,
+                                     4),
                     BatchNorm2D(ngf * mult // 2),
                     nn.ReLU(),
                     nn.Dropout(dropout)
                 ]
             else:
                 model += [
-                    nn.Conv2DTranspose(ngf * mult,
-                                       int(ngf * mult // 2),
-                                       kernel_size=4,
-                                       stride=2,
-                                       padding=1,
-                                       bias_attr=use_bias),
+                    # nn.Conv2DTranspose(ngf * mult,
+                    #                    int(ngf * mult // 2),
+                    #                    kernel_size=4,
+                    #                    stride=2,
+                    #                    padding=1,
+                    #                    bias_attr=use_bias),
+                    PixelShufflePack(ngf * mult,
+                                     ngf * mult // 2,
+                                     2,
+                                     4),
                     norm_layer(int(ngf * mult // 2)),
                     nn.ReLU(),
                     nn.Dropout(dropout)
@@ -95,7 +104,8 @@ class DCGenerator(nn.Layer):
                                stride=[1,2],
                                padding=1,
                                bias_attr=use_bias),
-            nn.Tanh()
+            # nn.Sigmoid()
+            # nn.Tanh()
             # nn.LogSigmoid()
         ]
 
@@ -103,8 +113,12 @@ class DCGenerator(nn.Layer):
 
     def forward(self, x):
         b = x.shape[0]
+        z = paddle.randn([b, 2000 - 64*24,1,1])
+        # t = x.shape[1]
+        # d = x.shape[2]
         x = paddle.reshape(x, [b,-1,1,1])
+        x = paddle.concat([x,z], axis=1)
         x = self.model(x)
         # return x[:,:,:31,:66].reshape([-1,31,66]) # 调整输出大小
-        return x[:,:,:31,:64].reshape([b,31,64]) # 调整输出大小
+        return x[:,:,:31,:64].reshape([b,24,31,64]) # 调整输出大小
         # return x
